@@ -85,9 +85,17 @@ extern int (*sceNetSend)(int, const void *, size_t, int);
 
 //sys
 extern int(*sceKernelLoadStartModule)(const char *name, size_t argc, const void *argv, unsigned int flags, int, int);
+extern int(*sceKernelStopUnloadModule)(SceKernelModule handle, size_t args, const void *argp, uint32_t flags, const SceKernelUnloadModuleOpt *pOpt, int *pRes);
+extern int(*sceKernelDlsym)(SceKernelModule handle, const char *symbol, void **addrp);
+extern int(*sceKernelGetSystemSwVersion)(SceKernelFwInfo * data);
+extern int(*sceKernelOpen)(const char *path, int flags, SceKernelMode mode);
+extern int(*sceKernelClose)(int d);
+extern int(*open)(const char *, int, ...);
+extern int(*close)(int);
 
 //notifications
 extern int(*sceSysUtilSendSystemNotificationWithText)(int messageType, const char* message);
+extern int64_t(*sceKernelSendNotificationRequest)(int64_t unk1, char* Buffer, size_t size, int64_t unk2);
 
 //libc
 extern void *(*malloc)(size_t size);
@@ -104,6 +112,7 @@ extern char *(*strncat)(char *dest, const char *src, size_t n);
 extern size_t (*strlen)(const char *s);
 extern int (*strcmp)(const char *s1, const char *s2);
 extern int (*strncmp)(const char *s1, const char *s2, size_t n);
+extern char *(*strdup)(const char *);
 extern int (*sprintf)(char *str, const char *format, ...);
 extern int (*snprintf)(char *str, size_t size, const char *format, ...);
 extern int (*vsprintf)(char * s, const char * format, va_list arg);

@@ -59,7 +59,6 @@ typedef volatile s16 vs16;
 typedef volatile s32 vs32;
 typedef volatile s64 vs64;
 
-typedef uint32_t __dev_t; 
 typedef uint32_t blksize_t;
 typedef int64_t  blkcnt_t;
 typedef uint32_t dev_t;
@@ -73,26 +72,5 @@ typedef uint32_t uid_t;
 typedef int64_t time_t;
 typedef long suseconds_t;
 
+typedef int32_t SceKernelModule;
 typedef unsigned int SceKernelUseconds;
-
-struct timespec {
-	time_t tv_sec;
-	long tv_nsec;
-};
-
-struct timeval {
-	time_t tv_sec;
-	suseconds_t tv_usec;
-};
-
-struct tm {
-	int tm_sec;
-	int tm_min;
-	int tm_hour;
-	int tm_mday;
-	int tm_mon;
-	int tm_year;
-	int tm_wday;
-	int tm_yday;
-	int tm_isdst;
-};

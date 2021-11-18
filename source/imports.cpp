@@ -17,9 +17,15 @@ int(*sceNetSend)(int, const void *, size_t, int);
 
 //sys
 int(*sceKernelLoadStartModule)(const char *name, size_t argc, const void *argv, unsigned int flags, int, int);
+int(*sceKernelStopUnloadModule)(SceKernelModule handle, size_t args, const void *argp, uint32_t flags, const SceKernelUnloadModuleOpt *pOpt, int *pRes);
+int(*sceKernelDlsym)(SceKernelModule handle, const char *symbol, void **addrp);
+int(*sceKernelGetSystemSwVersion)(SceKernelFwInfo * data);
+int(*sceKernelOpen)(const char *path, int flags, SceKernelMode mode);
+int(*sceKernelClose)(int d);
 
 //notifications
 int(*sceSysUtilSendSystemNotificationWithText)(int messageType, const char* message);
+int64_t(*sceKernelSendNotificationRequest)(int64_t unk1, char* Buffer, size_t size, int64_t unk2);
 
 //libc
 void *(*malloc)(size_t size);
@@ -36,6 +42,7 @@ char *(*strncat)(char *dest, const char *src, size_t n);
 size_t(*strlen)(const char *s);
 int(*strcmp)(const char *s1, const char *s2);
 int(*strncmp)(const char *s1, const char *s2, size_t n);
+char *(*strdup)(const char *);
 int(*sprintf)(char *str, const char *format, ...);
 int(*snprintf)(char *str, size_t size, const char *format, ...);
 int(*vsprintf)(char * s, const char * format, va_list arg);
@@ -49,6 +56,8 @@ double(*sin)(double x);
 double(*cos)(double x);
 double(*atan2)(double x, double y);
 double(*sqrt)(double vec);
+int(*open)(const char *, int, ...);
+int(*close)(int);
 
 void* sys_mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset) {
 	return (void*)syscall(477, addr, len, prot, flags, fd, offset);
@@ -73,6 +82,11 @@ void initImports() {
 	sys_dynlib_load_prx("libkernel.sprx", &h);
 	sys_dynlib_dlsym(h, "sceKernelSleep", &sceKernelSleep);
 	sys_dynlib_dlsym(h, "sceKernelUsleep", &sceKernelUsleep);
+	sys_dynlib_dlsym(h, "sceKernelSendNotificationRequest", &sceKernelSendNotificationRequest);
+	sys_dynlib_dlsym(h, "sceKernelOpen", &sceKernelOpen);
+	sys_dynlib_dlsym(h, "sceKernelClose", &sceKernelClose);
+	sys_dynlib_dlsym(h, "open", &open);
+	sys_dynlib_dlsym(h, "close", &close);
 
 	//thread imports
 	sys_dynlib_dlsym(h, "scePthreadCreate", &scePthreadCreate);
@@ -103,6 +117,7 @@ void initImports() {
 	sys_dynlib_dlsym(h, "strlen", &strlen);
 	sys_dynlib_dlsym(h, "strcmp", &strcmp);
 	sys_dynlib_dlsym(h, "strncmp", &strncmp);
+	sys_dynlib_dlsym(h, "strdup", &strdup);
 	sys_dynlib_dlsym(h, "sprintf", &sprintf);
 	sys_dynlib_dlsym(h, "snprintf", &snprintf);
 	sys_dynlib_dlsym(h, "vsprintf", &vsprintf);
@@ -123,7 +138,9 @@ void initImports() {
 			sys_dynlib_load_prx("libkernel_sys.sprx", &h);
 
 	sys_dynlib_dlsym(h, "sceKernelLoadStartModule", &sceKernelLoadStartModule);
-
+	sys_dynlib_dlsym(h, "sceKernelStopUnloadModule", &sceKernelStopUnloadModule);
+	sys_dynlib_dlsym(h, "sceKernelDlsym", &sceKernelDlsym);
+	sys_dynlib_dlsym(h, "sceKernelGetSystemSwVersion", &sceKernelGetSystemSwVersion);
 	//notify
 	int sysUtilHandle = sceKernelLoadStartModule("libSceSysUtil.sprx", 0, NULL, 0, 0, 0);
 	sys_dynlib_dlsym(sysUtilHandle, "sceSysUtilSendSystemNotificationWithText", &sceSysUtilSendSystemNotificationWithText);
