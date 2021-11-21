@@ -74,3 +74,19 @@ typedef long suseconds_t;
 
 typedef int32_t SceKernelModule;
 typedef unsigned int SceKernelUseconds;
+
+
+typedef struct
+{
+	size_t size;
+} SceKernelUnloadModuleOpt;
+
+typedef struct
+{
+	size_t size;
+	char versionString[0x1C];
+	unsigned int version;
+	unsigned int unk_24;
+} SceKernelFwInfo;
+
+typedef mode_t SceKernelMode;
